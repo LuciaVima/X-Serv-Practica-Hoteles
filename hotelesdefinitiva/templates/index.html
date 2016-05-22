@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Hoteles de Madrid</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+</head>
+
+<body>
+<div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Hoteles</h1>
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:1234/">PRINCIPAL</a></li>
+				<li><a href="http://localhost:1234/cargar">CARGAR</a></li>
+				<li><a href="http://localhost:1234/alojamientos">HOTELES</a></li>
+				<li><a href="http://localhost:1234/about">ABOUT</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			Los hoteles con más comentarios son:</br>
+			{% for listados,usuario, usuarioautenticado, usuarioactual, conf, titulo in lista %}
+				{% for hotel,imagen in listados %}
+					<a href="{{hotel.web}}" > {{hotel.nombre}}</a></br>Localizacion: {{hotel.address}}</br><img src="{{imagen.url}}" width="100" height="100"/></br><a href="http://localhost:1234/alojamientos/{{hotel.hotel_id}}">Mas información</a></br>
+				{% endfor %} 
+			{% endfor %}	
+			 
+		</div>
+		<div id="news">
+			<div class="newsItem">
+				<h1>Usuarios</h1>
+				{% for listados,usuario, usuarioautenticado, usuarioactual, conf, titulo in lista %}
+					<p>{% for usu, conf, titulo in usuario %}
+						{% if conf %}
+							<a href="http://localhost:1234/{{usu.username}}"> {{titulo}}</a> {{usu.username}}</br>
+						{% else %}
+							<a href="http://localhost:1234/{{usu.username}}"> {{usu.username}}</a> Pagina de  {{usu.username}}</br>
+						{% endif %}
+				   	{% endfor %}
+				{% endfor %}
+				</p>
+			</div>
+			
+			<div class="newsItem">
+				<h1>Registro</h1>
+				   {% for listados,usuario, usuarioautenticado, usuarioactual, conf, titulo in lista %} </p>
+					{% if usuarioautenticado %}
+						Hola {{usuarioactual}}
+						<a href="/logout">Logout</a>
+					{% else %}
+						Regístrese, por favor:
+						<form method="POST" action=""> Nombre: <input type="text" name="nombre"><br> Pass: <input type="text" name="pass"><br> <input type="submit" value="Enviar"><br></form>
+					{% endif %}
+				   {% endfor %}	
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright"></span>
+		<ul>
+			Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid
+			<li><a href="http://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=df42a73970504510VgnVCM2000001f4a900aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Descripción</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_es.xml">XML español</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_fr.xml">XML francés</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_en.xml">XML inglés</a></li>
+			
+		</ul>
+	</div>
+</div>
+</body>
+</html>

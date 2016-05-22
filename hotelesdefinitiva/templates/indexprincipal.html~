@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div id="content">
+	<h1>HOTELES </h1>
+
+	{% for alojamiento,imagen in alojamientos % }
+
+		<a href="{{alojamiento.web}}" > {{alojamiento.nombre}} </a>
+	        <p> Localizacion: {{alojamiento.address}} </p> 
+		<img src="{{imagen.url}}" width="100" height="100"/></br>
+		<a href="http://localhost:1234/alojamientos/{{alojamiento.hotel_id}}"> Mas informacion </a>
+		
+		{% endfor %}
+		
+</div>
+{% endblock content %}

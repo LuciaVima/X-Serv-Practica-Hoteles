@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Hoteles de Madrid</title>
+{% for listados, usuarioautenticado, nombre, colorazul, colorrosa, colorgris  in lista %}
+	{% if colorazul %}
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	{% endif %}
+	{% if colorgris %}
+		<link rel="stylesheet" type="text/css" href="css/style2.css" />
+	{% endif %}
+	{% if colorrosa %}
+		<link rel="stylesheet" type="text/css" href="css/style3.css" />
+	{% endif %}
+{% endfor %}
+
+
+<meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+</head>
+
+<body>
+<div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Hoteles</h1>
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:1234/">PRINCIPAL</a></li>
+				<li><a href="http://localhost:1234/alojamientos">HOTELES</a></li>
+				<li><a href="http://localhost:1234/about">ABOUT</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+		   {% for listados, usuarioautenticado, nombre, colorazul, colorrosa, colorgris in lista %}
+		   <h1> Esta página pernetece a {{nombre}}</h1>
+			{% for alojamiento, imagen, elegido in listados %}
+				<a href="{{alojamiento.web}}" > {{alojamiento.nombre}}</a></br>Localizacion: {{alojamiento.address}}</br>Fecha en la que fue elegido este hotel {{elegido.Fecha}}</br><img src="{{imagen.url}}" width="400" height="400"/></br><a href="http://localhost:1234/alojamientos/{{alojamiento.hotel_id}}">Mas información</a></br> 
+				
+			{% endfor %}
+		   {% endfor %}
+		</div>
+		<div id="news">
+			<div class="newsItem">
+				<h1>Cambiar el título de la página</h1>
+				{% for listados, usuarioautenticado, nombre, colorazul, colorrosa, colorgris in lista %}
+					{% if usuarioautenticado %}
+						<form method="POST" action="">Titulo de tu pagina: <input type="text" name="titulo"><br><input type="submit" value="Enviar"><br></form>
+					   {% else %}
+							No puede cambiar el título de la página. Regístrese.
+					   {% endif %}
+				{% endfor %}
+			</div>
+			<div class="newsItem">
+				<h1>Cambiar apariencia de la página</h1>
+				{% for listados, usuarioautenticado, nombre, colorazul, colorrosa, colorgris in lista %}
+					{% if usuarioautenticado %}
+						<form method="POST" action=""> <input type="radio" name="mibotondeopcion" checked value="Defecto">Por defecto </br><input type="radio" name="mibotondeopcion" value="Segundo">Tamaño 8 Fondo Gris </br><input type="radio" name="mibotondeopcion" value="Tercero">Tamaño 10 Fondo Rosa </br><input type="submit" value="Enviar"><br></form>
+					{% else %}
+							No puede cambiar la apariencia de la página. Regístrese.
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="newsItem">
+				{% for listados, usuarioautenticado, nombre, colorazul, colorrosa, colorgris in lista %}
+					<a href="http://localhost:1234/{{nombre}}/XML">XML del Usuario</a>
+				{% endfor %}
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright"></span>
+		<ul>
+			Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid
+			<li><a href="http://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=df42a73970504510VgnVCM2000001f4a900aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Descripción</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_es.xml">XML español</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_fr.xml">XML francés</a></li>
+			<li><a href="http://cursosweb.github.io/etc/alojamientos_en.xml">XML inglés</a></li>
+		</ul>
+	</div>
+</div>
+</body>
+</html>
+
