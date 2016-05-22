@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Hoteles de Madrid</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+</head>
+
+<body>
+<div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Hoteles</h1>
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:1234/">PRINCIPAL</a></li>
+				<li><a href="http://localhost:1234/alojamientos">HOTELES</a></li>
+				<li><a href="http://localhost:1234/about">ABOUT</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			{% for listados, autenticado in lista %}
+				{% for alojamientos,listaimagenes,listacomentario in listados %}
+					{% for alojamiento in alojamientos %}
+						Nombre: {{alojamiento.nombre}}</br> Email: {{alojamiento.email}}</br> Telefono: {{alojamiento.telefono}} </br> Descripcion: {{alojamiento.cuerpo}}</br> URL <a href={{alojamiento.web}}> {{alojamiento.web}} </a></br>
+					{%  endfor %}					
+				{% endfor %}
+			{% endfor %}
+			{% for listados, autenticado in lista %}
+				{% for alojamientos,listaimagenes,listacomentario in listados %}	
+					{% for imagen in listaimagenes %}
+						<img src="{{imagen.url}}" width="400" height="400"/></br>
+					{% endfor %}				
+				{% endfor %}
+			{% endfor %}
+			{% for listados, autenticado in lista %}
+				{% for alojamientos,listaimagenes,listacomentario in listados %}
+					{% for comentario in listacomentario %}
+						Opinión: {{comentario}}</br>
+					{% endfor %}
+				
+				{% endfor %}
+			{% endfor %}
+		</div>
+		<div id="news">
+			<div class="newsItem">
+				{% for listados, autenticado in lista %}
+					{% if autenticado %}
+						<h1>Comentario</h1>
+						<form method="POST" action=""> <input type="textarea" name="comentario"><br><input type="submit" value="Enviar"><br></form>
+					{% else %}
+						Al no estar registrado no puede poner comentarios del hotel. Resgístrese.
+					{% endif%}
+				{% endfor %}
+			</div>
+			<div class="newsItem">
+				{% for listados, autenticado in lista %}
+					{% if autenticado %}
+						<h1>Seleccionar hotel</h1>
+				   		<form method="POST" action=""> <input type="checkbox" name="seleccion" value="Seleccionar">Seleccionar hotel<input type="submit" value="OK">
+					{% else %}
+						Al no estar registrado no puede seleccionar el hotel. Resgístrese.
+					{% endif%}
+				{% endfor %}
+				
+			</div>
+			<div class="newsItem">
+				{% for listados, autenticado in lista %}
+					{% if autenticado %}
+						<h1>Seleccionar idioma</h1>
+				  		 <form method="POST" action=""> <input type="radio" name="mibotondeopcion" checked value="Esp">Esp <input type="radio" name="mibotondeopcion" value="Ingl">Ingl <input type="radio" name="mibotondeopcion" value="Fran">Fran <input type="submit" value="Enviar"><br></form>
+					{% else %}
+						Al no estar registrado no puede seleccionar idioma. Resgístrese.
+					{% endif%}
+				{% endfor %}
+				
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright"></span>
+		<ul>
+			Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid
+		</ul>
+	</div>
+</div>
+</body>
+</html>
+
