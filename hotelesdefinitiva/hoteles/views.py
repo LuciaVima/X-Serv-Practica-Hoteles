@@ -22,6 +22,7 @@ from operator import itemgetter
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
+from urlparse import urlparse
 
 # Create your views here.
 def normalize_whitespace(text):
@@ -286,14 +287,19 @@ def alojamientos(request):
 		cuerpo2 = request.body.split("&")[1]
 		categoria = cuerpo1.split("=")[1]
 		subcategoria = cuerpo2.split("=")[1]
-		subcategoria = subcategoria.split("+")[0] + " estrellas"
+		buscar = '+'
+		reemplazar = ' ' 
+		subcategoria = subcategoria.replace(buscar,reemplazar) 
+		#subcategoria = subcategoria.split("+")[0] + " estrellas"
 		for hotel in hoteles:
-			if (hotel.Categoria == categoria and len(categoria) != 0 and hotel.subCategoria == subcategoria and len(subcategoria) != 10):
+			if (hotel.Categoria == categoria and len(categoria) != 0 and hotel.subCategoria == subcategoria and len(subcategoria) != 0):
+
 				listadehoteles.append(hotel)
 			elif hotel.subCategoria == subcategoria and len(categoria) == 0:
 				listadehoteles.append(hotel)
-			elif hotel.Categoria == categoria and len(subcategoria) == 10:
+			elif hotel.Categoria == categoria and len(subcategoria) == 0:
 				listadehoteles.append(hotel)
+			
 		
 		
 	template = get_template('alojamientos.html')
@@ -312,6 +318,7 @@ def alojamiento (request, indice):
 	listaparaenviar = []
 	listahoteles = []
 	autenticado = False
+	contador = 0
 	for hotel in hoteles:	
 		if (hotel.hotel_id == indice) :
 			totalimagenes = 0
@@ -407,9 +414,15 @@ def usuario (request, nombre):
 	colorazul = False
 	colorrosa=False
 	colorgris=False
+	estupagina = False
 	listaparaenviar = []
 	listaconf = []
 	listafinal = []
+	contador = 0
+	respuesta = ''
+	numero = ''
+	listarespuestas = []
+	
 	for elegido in elegidos:
 		if elegido.Nombre == nombre:
 			encontradousuario = True
@@ -420,7 +433,30 @@ def usuario (request, nombre):
 						if ((imagen.hotel_id == hotel.hotel_id) and (puesto == False)):
 							listaparaenviar.append((hotel, imagen, elegido))
 							puesto = True
-						
+							contador = contador + 1
+
+
+	for n in range(0, int(round(float(contador)/10.0))):
+		respuesta = n
+		listarespuestas.append(respuesta)
+	if (len(listaparaenviar) > 10):
+		if ((float(contador)%10.0) != '0'):
+			respuesta = respuesta + 1
+			listarespuestas.append(respuesta)
+		try :
+			offset = request.META['QUERY_STRING']
+			offset = int(offset.split("=")[1])
+		except IndexError:
+			offset = 0
+		final = 0
+		inicio = 0
+		if (len(listaparaenviar) > 10):
+			inicio = int(offset*10)
+			final = inicio + 10
+			listaparaenviar = listaparaenviar[inicio:final]
+			print len(listaparaenviar)
+	
+						  
 	if request.user.is_authenticated():
 		usuarioautenticado = True
 		if request.method == 'POST' or request.method == 'PUT':
@@ -430,7 +466,7 @@ def usuario (request, nombre):
 			encontrado3=False
 			
 			
-			for usu in usuarios:
+			for usu in usus:
 			   if request.user.username == usu.Nombre:
 				resp = request.body.split("=")[0]
 				if  resp == 'titulo':
@@ -465,38 +501,46 @@ def usuario (request, nombre):
 							encontrado2 = True
 						
 
-			if encontrado == False:
-			    if request.user.username == usu.Nombre:
-				usu = ConfUsuario(Titulopagina = titulonuevo, Nombre = nombre, tama = '',	fondo = '')
-				usu.save()
-			elif encontrado2 == False:
-			    if request.user.username == usu.Nombre:
-				titulo = 'Pagina de ' + nombre
-				if (opcion == defecto):
+			if encontrado == False and selecciono == False and request.body.split("=")[0] == 'titulo' and request.user.username == nombre:
+				
+				titulonuevo = request.body.split("=")[1]
+				buscar = '+'
+				reemplazar = ' ' 
+				titulonuevo = titulonuevo.replace(buscar,reemplazar)
+			    	usu = ConfUsuario(Titulopagina = titulonuevo, Nombre = nombre, tama =10, fondo = 'azul')
+			    	usu.save()
+			elif encontrado2 == False and selecciono == False and request.user.username == nombre:
+				opcionelegida = request.body.split("=")[1]
+			    	titulo = 'Pagina de ' + nombre
+			    	if (opcionelegida == 'defecto'):
 					usu = ConfUsuario(Titulopagina = titulo, Nombre = nombre, tama = 10, fondo = 'azul')
 					usu.save()
-				if (opcion == Segundo):
+			    	if (opcionelegida== 'Segundo'):
 					usu = ConfUsuario(Titulopagina = titulo, Nombre = nombre, tama = 8, fondo = 'gris')
 					usu.save()
-				if (opcion == Tercero):
+			    	if (opcionelegida == 'Tercero'):
 					usu = ConfUsuario(Titulopagina = titulo, Nombre = nombre, tama = 10, fondo = 'rosa')
 					usu.save()
 
-	for usu in usuarios:
-		if request.user.username == usu.Nombre:	
-			if (usu.fondo == 'azul'):
+	for usuario in usuarios:
+		if request.user.username == usuario.Nombre:	
+			if (usuario.fondo == 'azul'):
 				colorazul = True
 				colorrosa = False
 				colorgris = False
-			if (usu.fondo == 'gris'):
+			if (usuario.fondo == 'gris'):
 				colorazul = False
 				colorrosa = False
 				colorgris = True
-			if (usu.fondo == 'rosa'):
+			if (usuario.fondo == 'rosa'):
 				colorazul = False
 				colorrosa = True
 				colorgris = False
-			listafinal.append((listaparaenviar, usuarioautenticado, nombre, colorazul, colorrosa, colorgris))
+
+	if (request.user.username == nombre):
+		estupagina = True
+	
+	listafinal.append((listaparaenviar, usuarioautenticado, nombre, colorazul, colorrosa, colorgris, estupagina, listarespuestas))
 
 	template = get_template('usuario.html')
 	Context = RequestContext(request,{'lista': listafinal})

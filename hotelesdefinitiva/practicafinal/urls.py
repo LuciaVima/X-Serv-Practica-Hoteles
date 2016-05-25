@@ -17,6 +17,6 @@ urlpatterns = patterns('',
     url(r'css/(.*)$', 'django.views.static.serve',
 {'document_root': 'templates/css/'}),
     url(r'^$', 'hoteles.views.principal'),
-    url(r'/?(.*)/', 'hoteles.views.xml'),
+    url(r'/?(.*)/XML$', 'hoteles.views.xml'),
     url(r'/?(.*)', 'hoteles.views.usuario'),
 )
